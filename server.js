@@ -4,11 +4,8 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const userRoute = require("./routes/userRoute");
-const productRoute = require("./routes/productRoute");
-const contactRoute = require("./routes/contactRoute");
 const errorHandler = require("./middleWare/errorMiddleware");
 const cookieParser = require("cookie-parser");
-const path = require("path");
 
 const app = express()
 
@@ -17,24 +14,17 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.use(
-    cors({
-        origin: ["http://localhost:3000", "https://myrims-frontend.onrender.com"],
-        credentials: true,
-      }
-    ));
-
-    app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(cors());
 
 // Routes Middleware
 app.use("/api/users", userRoute);
-app.use("/api/products", productRoute);
-app.use("/api/contactus", contactRoute);
 
 // Routes
 app.get("/", (req, res) => {
     res.send("Home Page");
 });
+
+const PORT = process.env.PORT || 5000;
 
 
 // Error Middleware
@@ -43,7 +33,7 @@ app.use(errorHandler);
 
 // Connect to database and start server
 
-const PORT = process.env.PORT || 5000;
+mongoose.set("strictQuery", false);
 
 mongoose
     .connect(process.env.MONGO_URI)
