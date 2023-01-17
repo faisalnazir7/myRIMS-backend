@@ -3,6 +3,7 @@ const Product = require("../models/productModel");
 const { fileSizeFormatter } = require("../utils/fileUpload");
 const cloudinary = require("cloudinary").v2;
 
+
 // Cloudinary Configuration 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -24,10 +25,9 @@ const createProduct = asyncHandler(async (req, res) => {
   let fileData = {};
   if (req.file) {
     // Save image to cloudinary
-    console.log(req.file.path);
     let uploadedFile;
     try {
-      uploadedFile = await cloudinary.uploader.upload(image, {
+      uploadedFile = await cloudinary.uploader.upload(req.file.path, {
         folder: "myInventory",
         resource_type: "image",
       });
